@@ -1,0 +1,14 @@
+{
+  "name": "code-connect",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api start:dev",
+    "build:web": "pnpm --filter web build",
+    "build:api": "pnpm --filter api build"
+  },
+  "dependencies": {
+    "pnpm": "^11.7.0"
+  }
+}
