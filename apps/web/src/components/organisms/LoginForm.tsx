@@ -21,6 +21,7 @@ export function LoginForm() {
           name="email"
           type="text"
           placeholder="usuario123"
+          autoComplete="username"
         />
 
         <div className="flex flex-col gap-1">
@@ -29,6 +30,7 @@ export function LoginForm() {
             name="password"
             type="password"
             placeholder="••••••"
+            autoComplete="current-password"
           />
           <div className="flex items-center justify-between mt-2">
             <Checkbox id="remember" label="Lembrar-me" />
