@@ -1,19 +1,14 @@
 name: Claude Code Action
 
 on:
-  issue_comment:
-    types: [created]
-  pull_request_review_comment:
-    types: [created]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
-  claude:
-    if: |
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude'))
+  claude-review:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
       pull-requests: write
       issues: write
       id-token: write
@@ -21,8 +16,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-          ref: ${{ github.event.issue.pull_request != null && format('refs/pull/{0}/head', github.event.issue.number) || github.ref }}
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: anthropics/claude-code-action@beta
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           model: claude-sonnet-4-6
+          direct_prompt: |
+            Review this pull request for bugs, security issues, and code quality problems.
+            Focus on: correctness, security vulnerabilities, missing error handling at system boundaries, and violations of REST conventions or the project's architecture.
+            Post a concise summary of findings as a PR comment. If you find critical issues, make that clear.
