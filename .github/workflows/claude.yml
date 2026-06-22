@@ -30,8 +30,11 @@ jobs:
             - REST convention violations (plural nouns, correct HTTP verbs, status codes 201/204/404/422, response envelope { data: T })
             - Missing error handling at system boundaries (user input, external APIs)
 
-            After your analysis, submit a formal GitHub PR review using mcp__github__pull_request_review_write:
-            - Use APPROVE if the code is acceptable (minor issues are ok)
-            - Use REQUEST_CHANGES if there are critical bugs, security vulnerabilities, or major violations
+            You MUST submit a formal GitHub PR review by calling mcp__github__pull_request_review_write with:
+            - owner: the repository owner
+            - repo: the repository name
+            - pullNumber: the PR number
+            - body: a concise summary of all findings
+            - event: APPROVE if the code is acceptable (minor issues are ok), or REQUEST_CHANGES if there are critical bugs, security vulnerabilities, or major violations
 
-            Include a concise summary of findings in the review body.
+            Do NOT post a regular comment. Only use mcp__github__pull_request_review_write to submit the review.
