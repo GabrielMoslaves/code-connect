@@ -20,8 +20,21 @@ jobs:
       - uses: anthropics/claude-code-action@beta
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           model: claude-sonnet-4-6
+          allowed_tools: "mcp__github__pull_request_review_write,mcp__github__create_and_submit_pull_request_review,Glob,Grep,LS,Read,Bash(git diff:*),Bash(git log:*)"
           direct_prompt: |
-            Review this pull request for bugs, security issues, and code quality problems.
-            Focus on: correctness, security vulnerabilities, missing error handling at system boundaries, and violations of REST conventions or the project's architecture.
-            Post a concise summary of findings as a PR comment. If you find critical issues, make that clear.
+            Review this pull request. Analyze the code changes for:
+            - Bugs and correctness issues
+            - Security vulnerabilities
+            - REST convention violations (plural nouns, correct HTTP verbs, status codes 201/204/404/422, response envelope { data: T })
+            - Missing error handling at system boundaries (user input, external APIs)
+
+            You MUST submit a formal GitHub PR review by calling mcp__github__create_and_submit_pull_request_review or mcp__github__pull_request_review_write with:
+            - owner: the repository owner
+            - repo: the repository name
+            - pullNumber: the PR number
+            - body: a concise summary of all findings
+            - event: APPROVE if the code is acceptable (minor issues are ok), or REQUEST_CHANGES if there are critical bugs, security vulnerabilities, or major violations
+
+            Do NOT post a regular comment. Only submit a formal PR review.
